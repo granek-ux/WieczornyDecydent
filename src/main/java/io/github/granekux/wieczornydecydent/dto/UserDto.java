@@ -1,8 +1,12 @@
 package io.github.granekux.wieczornydecydent.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@lombok.NoArgsConstructor
-@lombok.AllArgsConstructor
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserDto {
     private String email;
     private String password;

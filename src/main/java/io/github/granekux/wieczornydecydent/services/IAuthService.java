@@ -1,13 +1,14 @@
 package io.github.granekux.wieczornydecydent.services;
 
 import io.github.granekux.wieczornydecydent.dto.UserDto;
+import io.github.granekux.wieczornydecydent.exceptions.NotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
-interface IAuthService {
+public interface IAuthService {
 
-    String Register(UserDto user);
+    void Register(UserDto user) throws NotFoundException;
 
-    String Login(UserDto user);
+    String Login(UserDto userDto) throws NotFoundException;
 
 }
