@@ -21,24 +21,15 @@ class AuthController {
 
     @PostMapping("/register")
     public String registerUser(@RequestBody UserDto user) {
-        try{
-            authService.Register(user);
-        } catch (NotFoundException e) {
-            return e.getMessage();
-        }
 
-        return "Użytkownik zarejestrowany!"; // Zwróć sensowną odpowiedź
+        authService.Register(user);
+
+
+        return "Użytkownik zarejestrowany!";
     }
 
     @PostMapping("/login")
     public String login(@RequestBody UserDto user) {
-
-        try {
-            authService.Login(user);
-        } catch (NotFoundException e) {
-            return e.getMessage();
-        }
-
-        return "Zalogowano pomyślnie! (tu będzie token JWT)";
+        return authService.Login(user);
     }
 }

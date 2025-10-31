@@ -12,14 +12,13 @@ import lombok.NoArgsConstructor;
 @Table(name = "app_users")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Używamy auto-inkrementacji z PostgreSQL
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true) // Wymagany i unikalny
+    @Column(nullable = false, unique = true)
     private String email;
 
     @Column(nullable = false)
-    private String password; // Będziemy to oczywiście hashować!
+    private String password;
 
-    // W przyszłości możesz dodać np. role, datę rejestracji itp.
 }

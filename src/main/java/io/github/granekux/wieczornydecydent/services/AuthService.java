@@ -4,6 +4,7 @@ import io.github.granekux.wieczornydecydent.dto.UserDto;
 import io.github.granekux.wieczornydecydent.exceptions.NotFoundException;
 import io.github.granekux.wieczornydecydent.model.User;
 import io.github.granekux.wieczornydecydent.model.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -13,21 +14,24 @@ public class AuthService implements IAuthService {
 
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
 
-    public AuthService(UserRepository userRepository) {
+    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.jwtService = jwtService;
     }
 
     @Override
-    public void Register(UserDto user) throws NotFoundException {
+    public void Register(UserDto user) {
         Optional<User> existingUser = userRepository.findByEmail(user.getEmail());
 
         if (existingUser.isPresent()) {
             throw new NotFoundException("Email " + user.getEmail() + " już jest zajęty!");
         }
 
-        // TODO: Hashowanie hasła (BARDZO WAŻNE, zrobimy zaraz)
-        String hashedPassword = user.getPassword();
+        String hashedPassword = passwordEncoder.encode(user.getPassword());
 
 
         User newUser = new User();
@@ -40,18 +44,16 @@ public class AuthService implements IAuthService {
     }
 
     @Override
-    public String Login(UserDto userDto) throws NotFoundException {
+    public String Login(UserDto userDto) {
 
         User user = userRepository.findByEmail(userDto.getEmail())
                 .orElseThrow(() -> new NotFoundException("Błędny email lub hasło!"));
 
-        // TODO: Sprawdzanie hasła (BARDZO WAŻNE)
-        // Musimy porównać hasło z DTO z hasłem (hashem) w bazie
+        if (!passwordEncoder.matches(userDto.getPassword(), user.getPassword())) {
+            throw new NotFoundException("Błędny email lub hasło!");
+        }
 
-        // if(passwordEncoder.matches(userDto.getPassword(), user.getPassword())) { ... }
-
-        // TODO: Generowanie tokenu JWT
-        return "Tu będzie wygenerowany token JWT dla " + user.getEmail();
+        return jwtService.generateToken(user.getEmail());
     }
 
 }

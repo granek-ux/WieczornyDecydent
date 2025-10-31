@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 @Service
 public interface IAuthService {
 
-    void Register(UserDto user) throws NotFoundException;
+    void Register(UserDto user) ;
 
-    String Login(UserDto userDto) throws NotFoundException;
+    String Login(UserDto userDto);
 
 }
